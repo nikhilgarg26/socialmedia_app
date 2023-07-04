@@ -128,7 +128,7 @@ console.log(friendship);
   }
 
   const friendsno = 0;
-  // console.log(friends);
+  // console.log(friends)
 
   return (
     <div className="profile">
