@@ -1,0 +1,24 @@
+.homepage {
+    margin-top: 10px;
+    display: flex;
+    /* justify-content: space-around; */
+    /* align-items: center; */
+    width: 80%;
+    margin: 10px auto;
+    /* flex: 3; */
+}
+
+.section1 {
+    flex: 4;
+    margin-right: 5px;
+}
+
+.section2 {
+    flex: 6;
+    
+    margin-right: 5px;
+}
+
+.section3 {
+    flex: 4;
+}

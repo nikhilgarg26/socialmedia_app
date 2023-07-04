@@ -1,0 +1,81 @@
+.timeline .topost {
+    padding: 10px 15px;
+    background-color: white;
+    /* border: 2px solid rgb(167, 166, 166); */
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.timeline .topost .text {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.timeline .topost .text img {
+    width: 45px;
+    border-radius: 100%;
+    margin-right: 20px;
+}
+
+.timeline .topost .text input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 550px;
+}
+
+.timeline .topost hr {
+    border: none;
+    /* Remove the default border */
+    height: 2px;
+    /* Set the height of the horizontal rule */
+    background-color: #ccc;
+    /* Set the background color */
+    margin: 20px auto;
+    width: 95%;
+}
+.timeline .topost .post{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+}
+.timeline .topost .post .photos{
+    /* border: 2px solid red; */
+    padding: 0px 15px;
+    border-radius: 5px;
+    background-color: rgba(71, 120, 255, 0.842);
+    color: white;
+    width: 50%;    
+    /* height: 30px; */
+    margin: 0 10px;
+}
+.timeline .topost .post .photos label{
+    display: flex;
+    align-items: center;
+    /* justify-content: space-around; */
+    cursor: pointer;
+    height: 40px;
+
+}
+.timeline .topost .post button{
+    border: none;
+    cursor: pointer;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 400;
+}
+.timeline .topost .file{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.timeline .topost .file img{
+    width: 90%;
+    border-radius: 10px;
+}
+

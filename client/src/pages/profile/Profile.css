@@ -1,0 +1,85 @@
+.profile{
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.profileRight{
+    flex: 9;
+}
+
+.profileCover{
+    height: 320px;
+    position: relative;
+}
+
+.profileCoverImg{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0 0 10px 10px;
+}
+
+.profileUserImg{
+    background-color: white;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 150px;
+    border: 3px solid white;
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileInfoName{
+    font-size: 24px;
+}
+
+.profileInfoDesc{
+    font-weight: 300;
+}
+
+.profileRightBottom{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+#root{
+    background-color: rgb(216, 224, 231);
+}
+.settings{
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+.settings li{
+    padding: 5px 10px;
+    font-size: larger;
+}
+.settings li button {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: rgb(216, 224, 231);
+}
+.feed{
+    margin-bottom: 20px;
+}
+.friends{
+    /* border: 2px solid red; */
+    font-size: larger;
+    margin-top: 10px;
+    padding: 5px 20px;
+    background-color: beige;
+    border-radius: 10px;
+}
