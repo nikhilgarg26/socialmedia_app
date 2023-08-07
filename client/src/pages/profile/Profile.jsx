@@ -186,9 +186,9 @@ console.log(friendship);
           </div>
         </div>
         <div className="profileRightBottom">
-          {/* <Feed username={username} /> */}
           <div className="feed" style={{ marginRight: "10px" }}>
-            <Share />
+          {(user._id === userprofile._id) && <Share />}
+            
             <ul className='settings'>
               <li><button>Your Photos</button></li>
               <li><button>Friends <span>{friendsno}</span></button></li>
