@@ -18,6 +18,7 @@ export default function Profile() {
   const [profilefile, setprofileFile] = useState(null);
   const [coverfile, setcoverFile] = useState(null);
   const [friendship, setfriends] = useState(false);
+  const [waiting,setwaiting]=useState(false);
   // const [profilefile, setprofileFile] = useState(null);
 
 
@@ -33,6 +34,7 @@ export default function Profile() {
     };
     fetchPosts();
   }, [path]);
+  console.log(posts);
 
   // const allfriends=user.friends;
   // const t=allfriends.includes(userprofile._id);
@@ -42,9 +44,12 @@ export default function Profile() {
     if (user.friends.includes(path)) {
       setfriends(true);
     }
+    else if(user.sentreq.includes(path)){
+      setwaiting(true);
+    }
     // console.log(liked);
   }, [])
-console.log(friendship);
+// console.log(friendship);
 
   // console.log(user);
   // console.log(file);
@@ -113,7 +118,7 @@ console.log(friendship);
         await axios.put(("http://localhost:5000/api/auth/" + userprofile._id), { friends });
         setfriends(false);
       }
-    } else {
+    } else if(!friendship && !waiting) {
       // const friend1 = user.friends;
       // friend1.push(userprofile._id);
       // const res = await axios.put("http://localhost:5000/api/auth/" + user._id,
@@ -121,8 +126,13 @@ console.log(friendship);
       // )
       // dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
       const friendreq = userprofile.friendreq;
+      const sentreq=user.sentreq;
+      sentreq.push(userprofile._id);
       friendreq.push(user._id);
+      const res=await axios.put(("http://localhost:5000/api/auth/" + user._id), { sentreq });
+      dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
       await axios.put(("http://localhost:5000/api/auth/" + userprofile._id), { friendreq });
+      setwaiting(true);
       // setfriends(1);
     }
   }
@@ -140,24 +150,27 @@ console.log(friendship);
               src="/assets/design.png"
               alt=""
             /> */}
+
             <div>
               {userprofile.coverPicture ?
                 <img src={coverfile ? URL.createObjectURL(coverfile) : PF + userprofile.coverPicture} alt="kjn" className="profileCoverImg" /> :
                 <img src={coverfile ? URL.createObjectURL(coverfile) : PF + "defaultimg.png"} alt="nm" className="profileCoverImg" />
               }
               {(user._id === userprofile._id) && (<>
-                <label htmlFor="fileInput">
+                <label htmlFor="fileInputcover">
                   {/* <AddPhotoAlternateIcon  /> */}
                   <span style={{ margin: "10px" }}>Add cover</span>
                 </label>
                 <input
                   type="file"
-                  id="fileInput"
+                  id="fileInputcover"
                   style={{ display: "none" }}
                   onChange={e => setcoverFile(e.target.files[0])}
                 />
                 <button onClick={handleCover}>Change</button></>)}
             </div>
+
+
             <div>
               {userprofile.profilePicture ?
                 <img src={profilefile ? URL.createObjectURL(profilefile) : PF + userprofile.profilePicture} alt="kjn" className="profileUserImg" /> :
@@ -181,7 +194,7 @@ console.log(friendship);
           <div className="profileInfo">
             <h4 className="profileInfoName">{userprofile.firstname + " " + userprofile.lastname}</h4>
             <span className="profileInfoDesc">{userprofile.desc}</span>
-            {(user._id !== userprofile._id) && <button className='friends' onClick={handleFriendship}>{(friendship === true) ?  "Unfriend" : "Send Request"}</button>}
+            {(user._id !== userprofile._id) && <button className='friends' onClick={handleFriendship}>{(friendship === true) ?  "Unfriend" : ((friendship === false && waiting===true)? "Pending Req" : "Send Request")}</button>}
 
           </div>
         </div>

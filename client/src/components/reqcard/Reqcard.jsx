@@ -41,17 +41,24 @@ export default function Reqcard({ request }) {
         dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
         {
             const friends = frienduser.friends;
-            // console.log(friend);
+            const sentreq = frienduser.sentreq;
+            sentreq.splice(sentreq.indexOf(user._id), 1);
+            
             friends.push(user._id);
             const res = await axios.put("http://localhost:5000/api/auth/" + frienduser._id,
                 {
-                    friends
+                    friends,
+                    sentreq
                 }
             )
         }
         setacc(true);
     }
     const handleDlt = async () => {
+        const sentreq = frienduser.sentreq;
+        sentreq.splice(sentreq.indexOf(user._id), 1);
+        await axios.put(("http://localhost:5000/api/auth/" + frienduser._id), { sentreq });
+
         const friendreq = user.friendreq;
         friendreq.splice(friendreq.indexOf(request), 1);
         const res = await axios.put("http://localhost:5000/api/auth/" + user._id,

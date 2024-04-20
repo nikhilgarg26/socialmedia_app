@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import './Topbar.css'
 import SearchIcon from '@mui/icons-material/Search';
 import GroupIcon from '@mui/icons-material/Group';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../../context/Context';
 import { useState } from 'react';
 import axios from 'axios';
@@ -18,6 +18,8 @@ export default function Topbar() {
   // const [APIData, setAPIData] = useState(null)
   const [filteredResults, setFilteredResults] = useState([]);
   const [searchInput, setSearchInput] = useState('');
+
+  console.log("topbar tested !!");
 
   // useEffect(()=>{
   //   setAPIData();
@@ -42,12 +44,13 @@ export default function Topbar() {
 
   // console.log(filteredResults);
 
-
+  const navigate=useNavigate();
   const PF = "http://localhost:5000/images/"
   // console.log(freq);
   // console.log(user);
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
+    navigate("/login");
   };
 
   return (

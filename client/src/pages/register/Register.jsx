@@ -30,7 +30,7 @@ export default function Register() {
   }
 
   return (
-    <div class="container flex justify-center content-center mt-[55px] ">
+    <div class="container flex justify-center content-center login">
       <div class="right flex flex-col bg-white p-4 rounded-lg shadow-md w-[25%] relative">
         <input class="outline-blue-600 border-2 rounded-md mb-[12px] p-2 text-lg" type="text" placeholder="First Name" ref={fnameRef}/>
         <input class="outline-blue-600 border-2 rounded-md mb-[12px] p-2 text-lg" type="text" placeholder="Last Name" ref={lnameRef}/>

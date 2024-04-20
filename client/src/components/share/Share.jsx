@@ -15,8 +15,8 @@ export default function Share() {
 
     // console.log(file);
 
-    const handlePost = async () => {
-        // e.preventDefault();
+    const handlePost = async (e) => {
+        e.preventDefault();
         const newPost = {
             userId: user._id,
             desc,
@@ -52,7 +52,7 @@ export default function Share() {
                         {/* <img src="/assets/design.png" alt="" /> */}
                         {user.profilePicture ? <img src={PF + user.profilePicture} alt="kjn" /> : <img src={PF + "defaultimg.png"} alt="nm" />}
                     </Link>
-                    <input type="text" name="search" placeholder="What's on your mind ..."
+                    <input type="text" placeholder="What's on your mind ..."
                         onChange={e => setDesc(e.target.value)} />
                 </div>
 
