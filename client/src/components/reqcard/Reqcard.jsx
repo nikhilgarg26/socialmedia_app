@@ -7,9 +7,8 @@ import { Context } from '../../context/Context';
 
 export default function Reqcard({ request }) {
 
-    // console.log(friend);
     const [acc, setacc] = useState(false);
-    // const [dlt,setdlt]=useState(f);
+
     const { user, dispatch } = useContext(Context);
     const [frienduser, setuser] = useState({});
     const PF = "http://localhost:5000/images/";
@@ -24,48 +23,26 @@ export default function Reqcard({ request }) {
 
     // console.log(user.friends);
     const handleAcc = async () => {
-        const friends = user.friends;
-        // console.log(friend);
-        friends.push(request);
-        const friendreq = user.friendreq;
-        friendreq.splice(friendreq.indexOf(request), 1);
-        // console.log(user.friendreq);
-        // console.log(user.friends);
+        user.friends.push(request);
 
-        const res = await axios.put("http://localhost:5000/api/auth/" + user._id,
+        user.friendreq.splice(user.friendreq.indexOf(request), 1);
+
+        const res = await axios.post("http://localhost:5000/api/friend/accept",
             {
-                friends,
-                friendreq
-            }
+                friendreqid: request
+            }, { withCredentials: true }
         )
         dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
-        {
-            const friends = frienduser.friends;
-            const sentreq = frienduser.sentreq;
-            sentreq.splice(sentreq.indexOf(user._id), 1);
-            
-            friends.push(user._id);
-            const res = await axios.put("http://localhost:5000/api/auth/" + frienduser._id,
-                {
-                    friends,
-                    sentreq
-                }
-            )
-        }
         setacc(true);
     }
     const handleDlt = async () => {
-        const sentreq = frienduser.sentreq;
-        sentreq.splice(sentreq.indexOf(user._id), 1);
-        await axios.put(("http://localhost:5000/api/auth/" + frienduser._id), { sentreq });
 
-        const friendreq = user.friendreq;
-        friendreq.splice(friendreq.indexOf(request), 1);
-        const res = await axios.put("http://localhost:5000/api/auth/" + user._id,
+        user.friendreq.splice(user.friendreq.indexOf(request), 1);
+
+        const res = await axios.post("http://localhost:5000/api/friend/delete",
             {
-                // friends,
-                friendreq
-            }
+                friendreqid: request
+            }, { withCredentials: true }
         )
         dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
     }

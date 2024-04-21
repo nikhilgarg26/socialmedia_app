@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
       }
   
       const token = setUser(user._id);
-      res.cookie('uuid', token);
+      res.cookie('uuid', token, {httpOnly: true,sameSite: 'Lax' });
   
       // Convert Mongoose document to a plain JavaScript object
       const userWithoutPassword = user.toObject();

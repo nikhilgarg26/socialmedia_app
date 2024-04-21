@@ -1,3 +1,4 @@
 api/node_modules
 api/images
-api/newimage
+
+client/node_modules

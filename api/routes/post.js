@@ -54,6 +54,7 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const TYPE = req.body.type
+    console.log(TYPE)
 
     if (TYPE == "like") {
       const id = req.params.id

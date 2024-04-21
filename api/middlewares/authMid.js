@@ -3,6 +3,8 @@ const { getUser } = require("../services/auth")
 async function checkauth(req, res, next) {
     try {
         const token = req.cookies.uuid
+        console.log(req.cookies)
+        console.log(token)
 
         if (!token) {
             throw new Error("Login required!!")

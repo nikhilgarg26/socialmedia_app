@@ -1,5 +1,3 @@
-
-
 import { createContext, useEffect, useReducer } from "react";
 import Reducer from "./Reducer";
 
@@ -15,7 +13,7 @@ export const ContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(Reducer, init);
 
     useEffect(() => {
-        localStorage.setItem("user", JSON.stringify(state.user))
+        localStorage.setItem("user", JSON.stringify(state.user));
     }, [state.user]);
 
     return (

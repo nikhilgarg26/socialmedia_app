@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import './Leftbar.css'
 import Meme from '../Meme/Meme';
-import { Context } from '../../context/Context';
 import PacmanLoader from 'react-spinners/PacmanLoader';
 
 export default function Leftbar() {
@@ -10,7 +9,7 @@ export default function Leftbar() {
   const [loading, setloading] = useState(false);
 
   const [memelist, setlist] = useState([]);
-  const { user } = useContext(Context);
+  
   useEffect(() => {
     setloading(true);
     const fetchmeme = async () => {
@@ -22,7 +21,7 @@ export default function Leftbar() {
       }
     }
     fetchmeme();
-  }, [user])
+  }, [])
 
   // console.log(memelist);
   return (

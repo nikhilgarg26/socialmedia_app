@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import './Login.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 import { Context } from '../../context/Context'
 import axios from 'axios';
@@ -12,10 +12,9 @@ export default function Login() {
 
   const userRef = useRef();
   const passRef = useRef();
-  const { dispatch, isFetching } = useContext(Context);
+  const { dispatch } = useContext(Context);
   // console.log(isFetching);
 
-  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     setloading(true);
     e.preventDefault();
@@ -24,20 +23,21 @@ export default function Login() {
       const res = await axios.post("http://localhost:5000/api/auth/login", {
         email: userRef.current.value,
         password: passRef.current.value,
-      });
+      }, {withCredentials: true});
       // console.log(res);
       // console.log(res);
       if (res.status === 200) {
+
         setTimeout(() => {
           setloading(false);
           dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-        }, 2000)
+        }, 1500)
       }
     } catch (err) {
       console.log(err);
       dispatch({ type: "LOGIN_FAILURE" });
     }
-    navigate("/");
+    // navigate("/");
 
   }
 

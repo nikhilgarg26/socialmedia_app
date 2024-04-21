@@ -8,66 +8,61 @@ import { Context } from '../../context/Context'
 
 export default function Profile() {
   const { user, dispatch } = useContext(Context);
+
   const params = useParams();
   const path = params.userId;
-  // console.log(path);
-  // if(path)path="?userId="+path;
-  // console.log(params);
+
   const [posts, setPosts] = useState([]);
   const [userprofile, setuser] = useState([]);
-  const [profilefile, setprofileFile] = useState(null);
-  const [coverfile, setcoverFile] = useState(null);
-  const [friendship, setfriends] = useState(false);
-  const [waiting,setwaiting]=useState(false);
-  // const [profilefile, setprofileFile] = useState(null);
 
+  const [friendship, setfriends] = useState("");
+  // const [waiting,setwaiting]=useState("false");
 
   const PF = "http://localhost:5000/images/"
 
+  const [profilefile, setprofileFile] = useState(null);
+  const [coverfile, setcoverFile] = useState(null);
+
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await axios.get("http://localhost:5000/api/posts/?userId=" + path);
-      const res2 = await axios.get("http://localhost:5000/api/auth/" + path);
-      // console.log(res);
+      const res = await axios.get("http://localhost:5000/api/posts/?userId=" + path, { withCredentials: true });
+      const res2 = await axios.get("http://localhost:5000/api/auth/" + path, { withCredentials: true });
+
       setPosts(res.data);
       setuser(res2.data);
     };
     fetchPosts();
   }, [path]);
-  console.log(posts);
-
-  // const allfriends=user.friends;
-  // const t=allfriends.includes(userprofile._id);
 
   useEffect(() => {
-    // console.log(post.likes);
     if (user.friends.includes(path)) {
-      setfriends(true);
+      setfriends("Friends");
     }
-    else if(user.sentreq.includes(path)){
-      setwaiting(true);
+    else if (user.sentreq.includes(path)) {
+      setfriends("Requested");
     }
-    // console.log(liked);
-  }, [])
-// console.log(friendship);
+    else if (user.friendreq.includes(path)) {
+      setfriends("Accept ?");
+    }
+    else {
+      setfriends("Send Request");
+    }
 
-  // console.log(user);
-  // console.log(file);
-  // console.log(coverfile);
+
+  }, [path, user])
+
   const handleProfile = async () => {
 
     if (profilefile) {
       try {
         const data = new FormData();
-        const filename = Date.now() + profilefile.name;
-        // console.log(filename);
-        data.append("name", filename);
+        
         data.append("file", profilefile);
-        // console.log(data);
-        const profilePicture = filename;
+        data.append("profile", "profilePic")
+       
         try {
-          await axios.post("http://localhost:5000/api/upload", data);
-          const res = await axios.put(("http://localhost:5000/api/auth/" + user._id), { profilePicture });
+          const res = await axios.post("http://localhost:5000/api/upload", data, {withCredentials: true});
+          console.log(res)
           dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
         } catch (err) {
           console.log(err);
@@ -83,17 +78,14 @@ export default function Profile() {
     if (coverfile) {
       try {
         const data = new FormData();
-        const filename = Date.now() + coverfile.name;
-        // console.log(filename);
-        data.append("name", filename);
+        
         data.append("file", coverfile);
-        // console.log(data);
-        const coverPicture = filename;
+
         try {
-          await axios.post("http://localhost:5000/api/upload", data);
-          const res = await axios.put(("http://localhost:5000/api/auth/" + user._id), { coverPicture });
+          const res = await axios.post("http://localhost:5000/api/upload", data, {withCredentials: true});
+          console.log(res);
           dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
-          // console.log(res);
+
         } catch (err) {
           console.log(err);
         }
@@ -105,35 +97,44 @@ export default function Profile() {
   }
 
   const handleFriendship = async () => {
-    if (friendship) {
-      const friends = user.friends;
-      friends.splice(friends.indexOf(userprofile._id), 1);
-      const res = await axios.put("http://localhost:5000/api/auth/" + user._id,
-        { friends }
+    if (friendship === "Friends") {
+    
+      user.friendreq.splice(user.friendreq.indexOf(path), 1);
+
+      const res = await axios.post("http://localhost:5000/api/friend/unfriend",
+        {
+          friendid: path
+        }, { withCredentials: true }
       )
       dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
-      {
-        const friends = userprofile.friends;
-        friends.splice(friends.indexOf(user._id), 1);
-        await axios.put(("http://localhost:5000/api/auth/" + userprofile._id), { friends });
-        setfriends(false);
-      }
-    } else if(!friendship && !waiting) {
-      // const friend1 = user.friends;
-      // friend1.push(userprofile._id);
-      // const res = await axios.put("http://localhost:5000/api/auth/" + user._id,
-      //   { friend1 }
-      // )
-      // dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
-      const friendreq = userprofile.friendreq;
-      const sentreq=user.sentreq;
-      sentreq.push(userprofile._id);
-      friendreq.push(user._id);
-      const res=await axios.put(("http://localhost:5000/api/auth/" + user._id), { sentreq });
+      setfriends("Send Request");
+    }
+    else if (friendship === "Accept ?") {
+      
+      user.friends.push(path);
+
+      user.friendreq.splice(user.friendreq.indexOf(path), 1);
+
+      const res = await axios.post("http://localhost:5000/api/friend/accept",
+        {
+          friendreqid: path
+        }, { withCredentials: true }
+      )
       dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
-      await axios.put(("http://localhost:5000/api/auth/" + userprofile._id), { friendreq });
-      setwaiting(true);
-      // setfriends(1);
+      setfriends("Friends");
+    }
+    else if(friendship === "Send Request") {
+      
+      user.sentreq.push(path);
+
+      const res= await axios.post("http://localhost:5000/api/friend/sendreq",
+        {
+          friendreqid: path
+        }, { withCredentials: true }
+      )
+      console.log(res)
+      dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
+      setfriends("Requested");
     }
   }
 
@@ -194,14 +195,14 @@ export default function Profile() {
           <div className="profileInfo">
             <h4 className="profileInfoName">{userprofile.firstname + " " + userprofile.lastname}</h4>
             <span className="profileInfoDesc">{userprofile.desc}</span>
-            {(user._id !== userprofile._id) && <button className='friends' onClick={handleFriendship}>{(friendship === true) ?  "Unfriend" : ((friendship === false && waiting===true)? "Pending Req" : "Send Request")}</button>}
+            {(user._id !== userprofile._id) && <button className='friends' onClick={handleFriendship}>{friendship}</button>}
 
           </div>
         </div>
         <div className="profileRightBottom">
           <div className="feed" style={{ marginRight: "10px" }}>
-          {(user._id === userprofile._id) && <Share />}
-            
+            {(user._id === userprofile._id) && <Share />}
+
             <ul className='settings'>
               <li><button>Your Photos</button></li>
               <li><button>Friends <span>{friendsno}</span></button></li>

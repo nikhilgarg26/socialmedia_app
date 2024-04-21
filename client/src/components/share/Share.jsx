@@ -30,14 +30,14 @@ export default function Share() {
             // console.log(data);
             newPost.img = filename;
             try {
-                await axios.post("http://localhost:5000/api/upload", data);
+                await axios.post("http://localhost:5000/api/upload", data, {withCredentials: true});
             } catch (err) { 
                 console.log(err);
             }
         }
         try {
             // console.log(newPost);
-            await axios.post('http://localhost:5000/api/posts', newPost);
+            await axios.post('http://localhost:5000/api/posts', newPost, {withCredentials: true});
             // console.log(res);
             
             // window.location.replace("/post/" + res.data._id);

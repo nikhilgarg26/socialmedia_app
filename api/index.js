@@ -21,16 +21,19 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-io.on("connection", (client)=>{
+io.on("connection", (client) => {
   console.log(client.id)
-  client.on('message', (data)=>{
+  client.on('message', (data) => {
     console.log(data)
     users.set(data, client)
   })
 })
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // The exact URL of the frontend
+  credentials: true, // Crucial for cookies to be included
+}));
 app.use(express.json())
 app.use(cookieParser())
 app.set('socketio', io)
@@ -44,19 +47,28 @@ mongoose.connect('mongodb://127.0.0.1:27017/famebook', {
 
 
 // Upload
-app.post("/api/upload", upload.single('file'), async (req, res) => {
+app.post("/api/upload", checkauth, upload.single('file'), async (req, res) => {
+  var d;
   if (req.body.profile)
-    await User.findOneAndUpdate({ _id: req.userid.userid }, { profilePicture: req.file.filename })
+    d = await User.findOneAndUpdate({ _id: req.userid.userid }, { profilePicture: req.file.filename }, { new: true })
   else
-    await User.findOneAndUpdate({ _id: req.userid.userid }, { coverPicture: req.file.filename })
+    d = await User.findOneAndUpdate({ _id: req.userid.userid }, { coverPicture: req.file.filename }, { new: true })
 
-  res.status(200).json("File has been uploaded");
+  res.status(200).json(d)
 });
 
+app.use("/images", express.static(path.join(__dirname, "/images")));
+
 app.use("/api/auth", authRoute);
-app.use("/api/posts",checkauth, postRoute);
+app.use("/api/posts", checkauth, postRoute);
 app.use("/api/meme", memeRoute);
-app.use("/api/friend",checkauth, friendRoute)
+app.use("/api/friend", checkauth, friendRoute)
+
+app.use('/logout', (req, res) => {
+  // Clear the cookie by setting an expired date
+  res.cookie('uuid', '', { expires: new Date(0) });
+  res.send({ message: 'Logout successful' });
+});
 
 server.listen("5000", () => {
   console.log("Backend is running.");

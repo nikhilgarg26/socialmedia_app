@@ -11,21 +11,14 @@ export default function Post({ post }) {
     const [postuser, setuser] = useState({});
     const [liked, setlike] = useState(false);
 
-    // useEffect(() => {
-    //     // const res = axios.get("http://localhost:5000/api/posts/" + post._id)
-    //     // post = res.data;
-    // }, [liked])
-
     const PF = "http://localhost:5000/images/";
 
     const handleLike = async () => {
         if (liked) {
             const likes = post.likes;
             likes.splice(likes.indexOf(user._id), 1);
-             await axios.put("http://localhost:5000/api/posts/" + post._id,
-                { likes }
-            )
-            // console.log(likes);
+            await axios.put("http://localhost:5000/api/posts/" + post._id,
+                { type: "unlike" }, { withCredentials: true })
             setlike(false);
 
         } else {
@@ -33,9 +26,8 @@ export default function Post({ post }) {
             const likes = post.likes;
             likes.push(user._id);
 
-            const res = await axios.put("http://localhost:5000/api/posts/" + post._id,
-                { likes }
-            )
+            await axios.put("http://localhost:5000/api/posts/" + post._id,
+                { type: "like" }, { withCredentials: true })
             setlike(true);
             // console.log(res);
         }
@@ -49,7 +41,7 @@ export default function Post({ post }) {
             setuser(res.data);
         };
         fetchuser();
-    }, [user]);
+    }, [post.userId]);
 
     useEffect(() => {
         // console.log(post.likes);
